@@ -1,0 +1,25 @@
+TO-DO
+- create functions to show each of the q1-q4 graphs
+  have the view commands of q1-q4 execute those functions
+
+PATHS
+category (total in category, category by location, category by salesperson, items in category)
+-> location (total in location/category, location/category by salesperson, item in location/category)
+-> item (total in item/location, location/item by salesperson)
+
+category (total in category, category by location, category by salesperson, items in category)
+-> item (total in item, item by location, item by salesperson)
+-> location (total in location/item, location/item by salesperson)
+
+location (total in location, category by location, item by location, salesperson by location)
+-> category (total in category/location, item by category/location, salesperson by category/location)
+-> item (total in item/location, location/item by salesperson)
+
+location (total in location, category by location, item by location, salesperson by location)
+-> category (total in category/location, category/location by salesperson, item in category/location)
+-> item(total in item/location, location/item by salesperson)
+
+item (total in item, item by location, item by salesperson)
+-> location(total in location/item, location/item by salesperson)
+
+@salesperson (total for salesperson, salesperson by item, salesperson by category)

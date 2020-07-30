@@ -1,0 +1,143 @@
+@startuml
+!define DARKORANGE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+package "Data Handlers" {
+class Model {
+    year
+    quarter
+    month
+    years
+    sales_data
+    item_data
+    employee_data
+    daily_revenue
+    explore
+    first
+    __init__()
+    read_data()
+    get_years()
+    sort_sd_date()
+    calc_total_sales()
+    calc_category_sales()
+    calc_employee_sales()
+    calc_item_sales()
+    calc_location_sales()
+    init_left_plot()
+    init_q3_plot()
+    init_q4_plot()
+}
+
+class Year {
+    __init__()
+    clean_data()
+}
+class Quarter {
+    __init__()
+    clean_data()
+}
+class Month {
+    __init__()
+    clean_data()
+}
+class Location {
+    location
+    __init__()
+    clean_data()
+}
+class Category {
+    category
+    __init__()
+    clean_data()
+}
+class Salesperson {
+    salesperson
+    __init__()
+    clean_data()
+}
+class Item {
+    item
+    __init__()
+    clean_data()
+}
+
+Model <|-up- Year
+Model <|-up- Quarter
+Model <|-up- Month
+Model <|-- Location
+Model <|-- Category
+Model <|-- Item
+Model <|-- Salesperson
+}
+
+class Controller {
+    __init__()
+    main()
+    year_selected()
+    quarter_selected()
+    month_selected()
+    view_selected()
+    init_explore()
+    init_exp_2()
+    refresh()
+    all_children()
+    init_category()
+    init_location()
+    init_item()
+    category_selected()
+    location_selected()
+    item_selected()
+    exp_view_selected()
+}
+
+class View {
+    title_color
+    highlight_color
+    bg_color
+    button_color
+    bar_color
+    top_frame_color
+    explore
+    __init__()
+    main()
+    _main_frame()
+    _base_frames()
+    _sub_frames()
+    _top_frm_labels()
+    top_frame_menus()
+    update_month_menu()
+    _graph_buttons()
+    init_left_plot()
+    init_q1_plot()
+    init_q2_plot()
+    init_q3_plot()
+    init_q4_plot()
+    show_left_plot()
+    human_format()
+    show_q3_plot()
+    explore_window()
+    exp_window_2()
+    exp_base_frames()
+    exp_base_frames_2()
+    home_button()
+    refresh()
+    explore_buttons()
+    exp_buttons_2()
+    blank_graphs()
+    explore_time()
+    explore_menu()
+    init_cat_q3()
+    init_cat_q4()
+    init_cat_q1()
+    init_cat_q2()
+    cat_set_weights()
+    exp_set_weights()
+}
+
+View <-- Model
+Controller -[hidden]left-> Model
+View -[hidden]left-> Controller
+View o--> Controller
+Controller --> Model
+
+@enduml
