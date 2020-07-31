@@ -2,7 +2,6 @@
 !define DARKORANGE
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
-package "Data Handlers" {
 class Model {
     year
     quarter
@@ -61,14 +60,13 @@ class Item {
     clean_data()
 }
 
-Model <|-up- Year
-Model <|-up- Quarter
-Model <|-up- Month
+Model <|-- Year
+Model <|-- Quarter
+Model <|-- Month
 Model <|-- Location
 Model <|-- Category
 Model <|-- Item
 Model <|-- Salesperson
-}
 
 class Controller {
     __init__()
@@ -135,9 +133,12 @@ class View {
 }
 
 View <-- Model
+View -[hidden]left-> Model
 Controller -[hidden]left-> Model
-View -[hidden]left-> Controller
 View o--> Controller
 Controller --> Model
+
+
+
 
 @enduml
