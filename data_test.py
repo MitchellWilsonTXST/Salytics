@@ -30,6 +30,7 @@ def test_sort():
         if x < len(model.sales_data)-1:
             if model.sales_data[x][4] > model.sales_data[x+1][4]:
                 failures = failures + 1
+    print(failures)
     assert failures == 0
 
 
