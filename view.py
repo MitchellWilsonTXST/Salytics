@@ -35,7 +35,6 @@ class View(tk.Tk):
         self._graph_buttons()
         self._set_weights()
 
-
     def main(self):
         """
         Runs the main loop of the GUI for event recognition
@@ -43,7 +42,6 @@ class View(tk.Tk):
         :return: none
         """
         self.mainloop()
-
 
     def _main_frame(self):
         """
@@ -53,7 +51,6 @@ class View(tk.Tk):
         """
         self.main_frame = tk.LabelFrame(self)
         self.main_frame.pack(fill="both", expand=True)
-
 
     def _base_frames(self):
         """
@@ -74,7 +71,6 @@ class View(tk.Tk):
         self.left_frame.grid(row=1, column=0, rowspan=4, padx=10, pady=10, sticky="nsew")
         self.right_frame.grid(row=1, column=1, rowspan=4, padx=10, pady=10, sticky="nsew")
 
-
     def _sub_frames(self):
         """
         Creates and places the sub-frames into the base frames
@@ -94,7 +90,6 @@ class View(tk.Tk):
         self.q2_right.grid(row=0, column=1, rowspan=2, sticky="nsew")
         self.q3_right.grid(row=2, column=0, rowspan=2, sticky="nsew")
         self.q4_right.grid(row=2, column=1, rowspan=2, sticky="nsew")
-
 
     def _top_frm_labels(self):
         """
@@ -122,7 +117,6 @@ class View(tk.Tk):
         quarter_label.grid(row=0, column=3, sticky="nsew")
         month_label.grid(row=0, column=4, sticky="nsew")
 
-
     def top_frame_menus(self, years):
         """
         Creates and places year, quarter, and month, menus into the top frame
@@ -149,7 +143,6 @@ class View(tk.Tk):
         self.month_menu.bind("<<ComboboxSelected>>", self.controller.month_selected)
         self.month_menu.grid(row=1, column=4, padx=5, pady=5, sticky="nsew")
 
-
     def update_month_menu(self, months):
         """
         Updates the month menu to the display the correct months based on the quarter menu
@@ -158,7 +151,6 @@ class View(tk.Tk):
         :return: none
         """
         self.month_menu["values"] = months
-
 
     def _graph_buttons(self):
         """
@@ -209,7 +201,6 @@ class View(tk.Tk):
         q3_button.pack(fill="both")
         q4_button.pack(fill="both")
 
-
     def init_left_plot(self, daily_revenue):
         """
         Creates and places the total sales graph into left_frame
@@ -229,7 +220,6 @@ class View(tk.Tk):
         self.canvas_left = FigureCanvasTkAgg(figure, self.left_frame)
         self.canvas_left.get_tk_widget().pack(fill="both", expand=True)
 
-
     def init_q1_plot(self, er_frame):
         """
         Creates the and places the list of employees listbox into frame q1_right
@@ -245,7 +235,6 @@ class View(tk.Tk):
                    + str(f'{er_list[x][2]:,}') + ")"
             self.employee_list.insert(tk.END, item)
 
-
     def init_q2_plot(self, item_frame):
         """
         Creates and places the list of items listbox into q2_right
@@ -259,7 +248,6 @@ class View(tk.Tk):
         for x in range(len(items_list)):
             item = str(x + 1) + ". " + str(items_list[x][0]) + "  ($" + str(f'{items_list[x][1]:,}') + ")"
             self.item_list.insert(tk.END, item)
-
 
     def init_q3_plot(self, category_names, category_revenue):
         """
@@ -279,7 +267,6 @@ class View(tk.Tk):
         self.canvas_q3 = FigureCanvasTkAgg(figure, self.q3_right)
         self.canvas_q3.get_tk_widget().pack(fill="both", expand=True)
 
-
     def init_q4_plot(self, locations, location_sales):
         """
         Creates and places the location graph into q4_right
@@ -296,7 +283,6 @@ class View(tk.Tk):
         plot.bar(x, y, width=0.9, log=False, color=self.bar_color)
         self.canvas_q4 = FigureCanvasTkAgg(figure, self.q4_right)
         self.canvas_q4.get_tk_widget().pack(fill="both", expand=True)
-
 
     def show_left_plot(self, daily_revenue, year, quarter, month):
         """
@@ -331,7 +317,6 @@ class View(tk.Tk):
         plt.ylabel("Revenue ($" + str(f'{sum(daily_revenue):,}') + ")")
         plt.show()
 
-
     def human_format(self, num):
         """
         Reformats num for printing
@@ -345,7 +330,6 @@ class View(tk.Tk):
             magnitude += 1
             num /= 1000.0
         return '{}{}'.format('{:f}'.format(num).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
-
 
     def show_q3_plot(self, category_names, category_revenue):
         """
@@ -380,7 +364,6 @@ class View(tk.Tk):
         plt.ylabel("Revenue")
         plt.show()
 
-
     def show_q4_plot(self, locations, location_sales):
         """
         Shows the location sales graph in a new window
@@ -412,7 +395,6 @@ class View(tk.Tk):
         plt.ylabel("Revenue")
         plt.show()
 
-
     def explore_window(self, exp):
         """
         Removes the main frame and replaces it with a blank frame
@@ -428,7 +410,7 @@ class View(tk.Tk):
 
     def exp_window_2(self, exp):
         self.explore_frame.pack_forget()
-        #self.explore_frame.destroy()
+        # self.explore_frame.destroy()
         self.exp_frame_2 = tk.LabelFrame(self)
         self.exp_frame_2.pack(fill="both", expand=True)
         self.controller.init_exp_2(exp)
@@ -479,7 +461,7 @@ class View(tk.Tk):
 
 
     def exp_base_frames_2(self, exp):
-        if exp == "Category/Location":
+        if exp == "Category/Location" or exp == "Category/Item":
             self.exp_top_frame = tk.LabelFrame(self.exp_frame_2, padx=10, pady=10, bg=self.top_frame_color,
                                                highlightthickness=10, highlightbackground=self.highlight_color,
                                                highlightcolor=self.highlight_color, width=2300)
@@ -508,13 +490,10 @@ class View(tk.Tk):
             self.exp_q1.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
             self.exp_q2.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 
-
     def home_button(self, frame):
         self.home = tk.PhotoImage(file="home.png")
         home_button = tk.Button(frame, image=self.home, command=self.controller.refresh)
         home_button.pack(side=tk.LEFT, fill="y")
-
-
 
     def refresh(self):
         self.explore_frame.pack_forget()
@@ -539,7 +518,8 @@ class View(tk.Tk):
             q2_button.grid()
             q2_button.menu = tk.Menu(q2_button, tearoff=0)
             q2_button["menu"] = q2_button.menu
-            q2_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+            #q2_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+            q2_button.menu.add_command(label="Explore", command=lambda: self.exp_window_2("Item"))
 
             q3_button.grid()
             q3_button.menu = tk.Menu(q3_button, tearoff=0)
@@ -631,8 +611,25 @@ class View(tk.Tk):
             q3_button.grid()
             q3_button.menu = tk.Menu(q3_button, tearoff=0)
             q3_button["menu"] = q3_button.menu
-            #q3_button.menu.add_checkbutton(label="Explore", variable=self.explore)
-            q3_button.menu.add_command(label="Explore", command=lambda: self.exp_window_3("Item") )
+            q3_button.menu.add_command(label="Explore", command=lambda: self.exp_window_3("Item"))
+
+            q1_button.pack(fill="both")
+            q2_button.pack(fill="both")
+            q3_button.pack(fill="both")
+        elif exp == "Category/Item":
+            q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
+            q2_button = tk.Menubutton(self.exp_q2, text="Salesperson", height=1, bg=self.button_color)
+            q3_button = tk.Menubutton(self.exp_q3, text="Location", height=1, bg=self.button_color)
+
+            q1_button.grid()
+            q1_button.menu = tk.Menu(q1_button, tearoff=0)
+            q1_button["menu"] = q1_button.menu
+            q1_button.menu.add_command(label="View", command=lambda: self.controller.exp_view_selected_2("q1"))
+
+            q3_button.grid()
+            q3_button.menu = tk.Menu(q3_button, tearoff=0)
+            q3_button["menu"] = q3_button.menu
+            q3_button.menu.add_command(label="Explore", command=lambda: self.exp_window_3("Item"))
 
             q1_button.pack(fill="both")
             q2_button.pack(fill="both")
@@ -645,6 +642,8 @@ class View(tk.Tk):
         if exp == "Category/Location/Item":
             q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
             q2_button = tk.Menubutton(self.exp_q2, text="Salesperson", height=1, bg=self.button_color)
+            q1_button.pack(fill="both")
+            q2_button.pack(fill="both")
 
 
     def blank_graphs(self, exp):
@@ -677,7 +676,7 @@ class View(tk.Tk):
                                highlightthickness=0, bg=self.top_frame_color, fg=self.title_color)
         quarter_label = tk.Label(self.exp_top_frame, text="   QUARTER    \n" + quarter, relief="groove", borderwidth=0,
                                  highlightthickness=0, bg=self.top_frame_color, fg=self.title_color)
-        year_label = tk.Label(self.exp_top_frame, text="   MONTH    \n" + month , relief="groove", borderwidth=0,
+        year_label = tk.Label(self.exp_top_frame, text="   MONTH    \n" + month, relief="groove", borderwidth=0,
                               highlightthickness=0, bg=self.top_frame_color, fg=self.title_color)
         label_font = font.Font(size=15, weight="bold")
         month_label["font"] = label_font
@@ -703,6 +702,9 @@ class View(tk.Tk):
         elif exp == "Category/Location":
             self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_loc_selected)
             self.exp_menu.set("Select a location")
+        elif exp == "Category/Item":
+            self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_item_selected)
+            self.exp_menu.set("Select an item")
         elif exp == "Category/Location/Item":
             self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_loc_item_selected)
             self.exp_menu.set("Select an item")
@@ -725,7 +727,8 @@ class View(tk.Tk):
         if self.controller.model.explore == "Category" or self.controller.model.explore == "Location":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q3)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
-        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location":
+        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location" \
+                or self.controller.model.explore == "Category/Location/Item" or self.controller.model.explore == "Category/Item":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q1)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
 
@@ -740,7 +743,7 @@ class View(tk.Tk):
         if self.controller.model.explore == "Category" or self.controller.model.explore == "Location":
             self.canvas_q2_exp = FigureCanvasTkAgg(figure, self.exp_q4)
             self.canvas_q2_exp.get_tk_widget().pack(fill="both", expand=True)
-        elif self.controller.model.explore == "Item":
+        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Item":
             self.canvas_q2_exp = FigureCanvasTkAgg(figure, self.exp_q3)
             self.canvas_q2_exp.get_tk_widget().pack(fill="both", expand=True)
 
@@ -748,7 +751,9 @@ class View(tk.Tk):
     def init_cat_q1(self, er_frame):
         if self.controller.model.explore == "Category" or self.controller.model.explore == "Location":
             self.employee_list_exp = tk.Listbox(self.exp_q1)
-        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location":
+        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location"\
+                or self.controller.model.explore == "Category/Location/Item"\
+                or self.controller.model.explore == "Category/Item":
             self.employee_list_exp = tk.Listbox(self.exp_q2)
         self.employee_list_exp.pack(fill="both", expand=True)
         er_list = er_frame.values.tolist()
@@ -769,7 +774,6 @@ class View(tk.Tk):
             if str(items_list[x][1]) != "0":
                 item = str(x + 1) + ". " + str(items_list[x][0]) + "  ($" + str(f'{items_list[x][1]:,}') + ")"
                 self.item_list_exp.insert(tk.END, item)
-
 
 
     def _set_weights(self):
@@ -816,8 +820,7 @@ class View(tk.Tk):
         self.exp_frame_3.grid_rowconfigure(0, weight=1)
         self.exp_frame_3.grid_rowconfigure(1, weight=100)
 
-
-    #def cat_set_weights_1(self):
+    # def cat_set_weights_1(self):
     #    self.explore_frame.grid_columnconfigure(0, weight=1)
     #    self.explore_frame.grid_columnconfigure(1, weight=1)
     #    self.explore_frame.grid_rowconfigure(0, weight=1)
