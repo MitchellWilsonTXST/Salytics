@@ -7,6 +7,7 @@ from category import Category
 from location import Location
 from item import Item
 from salesperson import Salesperson
+import time
 
 
 class Controller:
@@ -242,7 +243,6 @@ class Controller:
 
 
     def init_exp_2(self, exp):
-        print(exp)
         self.model.explore = self.model.explore + "/" + exp
         self.view.exp_base_frames_2(self.model.explore)
         self.view.home_button(self.view.exp_top_frame)
@@ -250,10 +250,24 @@ class Controller:
         self.view.blank_graphs(self.model.explore)
         self.view.exp_set_weights()
         self.view.explore_time(self.model.year, self.model.quarter, self.model.month)
-        print(exp)
         if self.model.explore == "Category/Location":
-            print("view.init_exp_2")
-            self.view.explore_menu(exp, self.model.locations)
+            self.view.explore_menu(self.model.explore, self.model.locations)
+            self.init_cat_loc()
+
+
+    def init_exp_3(self, exp):
+        self.model.explore = self.model.explore + "/" + exp
+        self.view.exp_base_frames_3(self.model.explore)
+        self.view.home_button(self.view.exp_top_frame)
+        self.view.exp_buttons_3(self.model.explore)
+        self.view.blank_graphs_2(self.model.explore)
+        self.view.exp_set_weights_2()
+        self.view.explore_time(self.model.year, self.model.quarter, self.model.month)
+        if self.model.explore == "Category/Location/Item":
+            print(self.model.explore)
+            self.view.explore_menu(self.model.explore, self.model.item_names)
+            self.init_cat_loc_item()
+        print("ayeee")
 
 
     def refresh(self):
@@ -342,6 +356,28 @@ class Controller:
         self.item = Item(sd, id, ed)
 
 
+    def init_cat_loc(self):
+        sd = []
+        id = []
+        ed = []
+        sd = self.category.sales_data.copy()
+        id = self.category.item_data.copy()
+        ed = self.category.employee_data.copy()
+        self.model.first = True
+        self.location = Location(sd, id, ed)
+
+
+    def init_cat_loc_item(self):
+        sd = []
+        id = []
+        ed = []
+        sd = self.location.sales_data.copy()
+        id = self.location.item_data.copy()
+        ed = self.location.employee_data.copy()
+        self.model.first = True
+        self.item = Item(sd, id, ed)
+
+
     def category_selected(self, event):
         self.category.category = self.view.exp_menu.get()
         self.category.clean_data()
@@ -396,6 +432,32 @@ class Controller:
         self.view.explore_frame.grid_rowconfigure(1, weight=1)
 
 
+    def cat_loc_selected(self, event):
+        self.location.location = self.view.exp_menu.get()
+        self.location.clean_data()
+        self.view.canvas_q1_exp.get_tk_widget().destroy()
+        self.view.canvas_q2_exp.get_tk_widget().destroy()
+        self.view.item_list_exp.destroy()
+        if self.model.first:
+            self.view.employee_list_exp.get_tk_widget().destroy()
+            self.model.first = False
+        else:
+            self.view.employee_list_exp.destroy()
+        self.view.init_cat_q3(self.location.daily_revenue)
+        self.view.init_cat_q1(self.location.er_frame)
+        self.view.init_cat_q2(self.location.item_frame)
+
+
+    def cat_loc_item_selected(self, event):
+        self.location.location = self.view.exp_menu.get()
+        self.location.clean_data()
+        self.view.canvas_q1_exp.get_tk_widget().destroy()
+        self.view.canvas_q2_exp.get_tk_widget().destroy()
+        self.view.item_list_exp.destroy()
+        self.view.employee_list_exp.get_tk_widget().destroy()
+        self.view.init_cat_q3(self.item.daily_revenue)
+
+
     def exp_view_selected(self, frame):
         if self.model.explore == "Category":
             if frame == "q3":
@@ -403,6 +465,11 @@ class Controller:
             elif frame == "q4":
                 self.view.show_q4_plot(self.category.locations, self.category.location_sales)
 
+
+    def exp_view_selected_2(self, frame):
+        if self.model.explore == "Category/Location":
+            if frame == "q1":
+                self.view.show_left_plot(self.location.daily_revenue, self.model.year, self.model.quarter, self.model.month)
 
 
 if __name__ == "__main__":

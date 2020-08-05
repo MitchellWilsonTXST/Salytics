@@ -434,6 +434,13 @@ class View(tk.Tk):
         self.controller.init_exp_2(exp)
 
 
+    def exp_window_3(self, exp):
+        self.exp_frame_2.pack_forget()
+        self.exp_frame_3 = tk.LabelFrame(self)
+        self.exp_frame_3.pack(fill="both", expand=True)
+        self.controller.init_exp_3(exp)
+
+
     def exp_base_frames(self, exp):
         """
 
@@ -487,6 +494,19 @@ class View(tk.Tk):
             self.exp_q2.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
             self.exp_q3.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 
+
+    def exp_base_frames_3(self, exp):
+        if exp == "Category/Location/Item":
+            self.exp_top_frame = tk.LabelFrame(self.exp_frame_3, padx=10, pady=10, bg=self.top_frame_color,
+                                               highlightthickness=10, highlightbackground=self.highlight_color,
+                                               highlightcolor=self.highlight_color, width=2300)
+            self.exp_q1 = tk.LabelFrame(self.exp_frame_3, padx=10, pady=10, bg=self.bg_color,
+                                        borderwidth=0, highlightthickness=0)
+            self.exp_q2 = tk.LabelFrame(self.exp_frame_3, padx=10, pady=10, bg=self.bg_color,
+                                        borderwidth=0, highlightthickness=0)
+            self.exp_top_frame.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+            self.exp_q1.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+            self.exp_q2.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 
 
     def home_button(self, frame):
@@ -596,13 +616,35 @@ class View(tk.Tk):
 
 
     def exp_buttons_2(self, exp):
+        self.view = tk.StringVar()
+        self.explore = tk.StringVar()
         if exp == "Category/Location":
             q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
             q2_button = tk.Menubutton(self.exp_q2, text="Salesperson", height=1, bg=self.button_color)
-            q3_button = tk.Menubutton(self.exp_q3, text="Location", height=1, bg=self.button_color)
+            q3_button = tk.Menubutton(self.exp_q3, text="Item", height=1, bg=self.button_color)
+
+            q1_button.grid()
+            q1_button.menu = tk.Menu(q1_button, tearoff=0)
+            q1_button["menu"] = q1_button.menu
+            q1_button.menu.add_command(label="View", command=lambda: self.controller.exp_view_selected_2("q1"))
+
+            q3_button.grid()
+            q3_button.menu = tk.Menu(q3_button, tearoff=0)
+            q3_button["menu"] = q3_button.menu
+            #q3_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+            q3_button.menu.add_command(label="Explore", command=lambda: self.exp_window_3("Item") )
+
             q1_button.pack(fill="both")
             q2_button.pack(fill="both")
             q3_button.pack(fill="both")
+
+
+    def exp_buttons_3(self, exp):
+        self.view = tk.StringVar()
+        self.explore = tk.StringVar()
+        if exp == "Category/Location/Item":
+            q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
+            q2_button = tk.Menubutton(self.exp_q2, text="Salesperson", height=1, bg=self.button_color)
 
 
     def blank_graphs(self, exp):
@@ -618,6 +660,16 @@ class View(tk.Tk):
         if exp == "Category" or exp == "Location":
             self.item_list_exp = FigureCanvasTkAgg(figure, self.exp_q4)
             self.item_list_exp.get_tk_widget().pack(fill="both", expand=True)
+
+
+    def blank_graphs_2(self, exp):
+        figure = Figure(figsize=(2, 1), dpi=100)
+        plot = figure.add_subplot(1, 1, 1)
+
+        self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q1)
+        self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
+        self.canvas_q2_exp = FigureCanvasTkAgg(figure, self.exp_q2)
+        self.canvas_q2_exp.get_tk_widget().pack(fill="both", expand=True)
 
 
     def explore_time(self, year, quarter, month):
@@ -648,6 +700,12 @@ class View(tk.Tk):
         elif exp == "Item":
             self.exp_menu.bind("<<ComboboxSelected>>", self.controller.item_selected)
             self.exp_menu.set("Select an item")
+        elif exp == "Category/Location":
+            self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_loc_selected)
+            self.exp_menu.set("Select a location")
+        elif exp == "Category/Location/Item":
+            self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_loc_item_selected)
+            self.exp_menu.set("Select an item")
 
         self.exp_menu.pack(fill="both", expand=True)
         menu_font = font.Font(size=15)
@@ -667,7 +725,7 @@ class View(tk.Tk):
         if self.controller.model.explore == "Category" or self.controller.model.explore == "Location":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q3)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
-        elif self.controller.model.explore == "Item":
+        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q1)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
 
@@ -690,7 +748,7 @@ class View(tk.Tk):
     def init_cat_q1(self, er_frame):
         if self.controller.model.explore == "Category" or self.controller.model.explore == "Location":
             self.employee_list_exp = tk.Listbox(self.exp_q1)
-        elif self.controller.model.explore == "Item":
+        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location":
             self.employee_list_exp = tk.Listbox(self.exp_q2)
         self.employee_list_exp.pack(fill="both", expand=True)
         er_list = er_frame.values.tolist()
@@ -701,7 +759,10 @@ class View(tk.Tk):
 
 
     def init_cat_q2(self, item_frame):
-        self.item_list_exp = tk.Listbox(self.exp_q2)
+        if self.controller.model.explore == "Category/Location":
+            self.item_list_exp = tk.Listbox(self.exp_q3)
+        else:
+            self.item_list_exp = tk.Listbox(self.exp_q2)
         self.item_list_exp.pack(fill="both", expand=True)
         items_list = item_frame.values.tolist()
         for x in range(len(items_list)):
@@ -747,6 +808,13 @@ class View(tk.Tk):
         self.exp_frame_2.grid_rowconfigure(0, weight=1)
         self.exp_frame_2.grid_rowconfigure(1, weight=100)
         self.exp_frame_2.grid_rowconfigure(2, weight=100)
+
+
+    def exp_set_weights_2(self):
+        self.exp_frame_3.grid_columnconfigure(0, weight=1)
+        self.exp_frame_3.grid_columnconfigure(1, weight=1)
+        self.exp_frame_3.grid_rowconfigure(0, weight=1)
+        self.exp_frame_3.grid_rowconfigure(1, weight=100)
 
 
     #def cat_set_weights_1(self):

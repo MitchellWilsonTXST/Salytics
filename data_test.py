@@ -8,11 +8,13 @@ import pytest
 def init():
     pass
 
+
 def test_read():
     print("\n---------- TEST READ ----------")
     model = Model()
     model.read_data("data/Sales_Data.csv")
     assert len(model.sales_data) == 150000
+
 
 def test_years():
     model = Model()
@@ -20,6 +22,7 @@ def test_years():
     model.get_years()
     years = ["ALL", "2019", "2018", "2017"]
     assert model.years == years
+
 
 def test_sort():
     model = Model()
