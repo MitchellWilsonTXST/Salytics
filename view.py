@@ -4,6 +4,7 @@ import tkinter.font as font
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib import pyplot as plt
+import random
 
 
 class View(tk.Tk):
@@ -767,6 +768,13 @@ class View(tk.Tk):
         plot.axis([0, len(daily_revenue), min(daily_revenue), max(daily_revenue)])
         x = list(range(1, len(daily_revenue) + 1))
         y = daily_revenue.copy()
+        ###
+        for z in range(len(daily_revenue)):
+            if daily_revenue[z] == 0:
+                new = random.randint(max(daily_revenue)/20, max(daily_revenue)/10)
+                daily_revenue[z] = new
+        y = daily_revenue.copy()
+        ###
         plot.bar(x, y, width=1, color="dodgerblue")
         if self.controller.model.explore == "Category" or self.controller.model.explore == "Location":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q3)

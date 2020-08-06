@@ -65,3 +65,31 @@ def test_cat():
                        ["Table", "Tables", 20]]
     model.calc_category_sales()
     assert model.category_revenue == [40, 20, 0, 0, 0, 0, 0]
+
+
+def test_emp():
+    model = Model()
+    model.sales_data = [["Bob", "Bob", "Chair", 2, "2012-01-01"],
+                        ["Bob", "Bob", "Table", 2, "2012-01-02"],
+                        ["Ted", "Bob", "Chair", 0, "2012-01-03"]]
+    model.item_data = [["Chair", "Chairs", 10],
+                       ["Table", "Tables", 20]]
+    model.employee_data = [["Bob", "Bob", "M", "Kansas City", 60],
+                           ["Ted", "Bob", "M", "Houston", 50]]
+    model.calc_employee_sales()
+    assert model.er_frame.values.tolist() == [["Bob", "Bob", 60],
+                                              ["Ted", "Bob", 0]]
+
+
+def test_item():
+    model = Model()
+    model.sales_data = [["Bob", "Bob", "Chair", 2, "2012-01-01"],
+                        ["Bob", "Bob", "Table", 2, "2012-01-02"],
+                        ["Ted", "Bob", "Chair", 0, "2012-01-03"]]
+    model.item_data = [["Chair", "Chairs", 10],
+                       ["Table", "Tables", 20]]
+    model.employee_data = [["Bob", "Bob", "M", "Kansas City", 60],
+                           ["Ted", "Bob", "M", "Houston", 50]]
+    model.calc_item_sales()
+    assert model.item_frame.values.tolist() == [["Table", 40],
+                                                ["Chair", 20]]

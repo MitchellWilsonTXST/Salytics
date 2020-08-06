@@ -20,9 +20,9 @@ class Controller:
         self.model.get_years()
         self.model.calc_total_sales()
         self.model.calc_category_sales()
-        self.model. calc_employee_sales()
-        self.model. calc_item_sales()
-        self.model. calc_location_sales()
+        self.model.calc_employee_sales()
+        self.model.calc_item_sales()
+        self.model.calc_location_sales()
 
         self.view = View(self)
         self.view.top_frame_menus(self.model.years)
@@ -315,6 +315,21 @@ class Controller:
             self.view.exp_frame_3.pack_forget()
             self.view.exp_frame_3.destroy()
             self.view.main_frame.pack(fill="both", expand=True)
+        self.year = Year(self.model.year, self.model.sales_data, self.model.item_data, self.model.employee_data)
+        self.quarter = Quarter(self.model.quarter, self.year.sales_data, self.year.item_data, self.year.employee_data)
+        self.month = Month(self.model.month, self.quarter.sales_data,
+                           self.quarter.item_data, self.quarter.employee_data)
+        self.view.canvas_left.get_tk_widget().destroy()
+        self.view.init_left_plot(self.year.daily_revenue)
+        self.view.employee_list.destroy()
+        self.view.init_q1_plot(self.year.er_frame)
+        self.view.item_list.destroy()
+        self.view.init_q2_plot(self.year.item_frame)
+        self.view.canvas_q3.get_tk_widget().destroy()
+        self.view.init_q3_plot(self.year.category_names, self.year.category_revenue)
+        self.view.canvas_q4.get_tk_widget().destroy()
+        self.view.init_q4_plot(self.year.locations, self.year.location_sales)
+
 
 
     def all_children(window):
