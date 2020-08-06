@@ -478,7 +478,8 @@ class View(tk.Tk):
 
 
     def exp_base_frames_3(self, exp):
-        if exp == "Category/Location/Item" or exp == "Category/Item/Location":
+        if exp == "Category/Location/Item" or exp == "Category/Item/Location"\
+                or exp == "Location/Category/Item":
             self.exp_top_frame = tk.LabelFrame(self.exp_frame_3, padx=10, pady=10, bg=self.top_frame_color,
                                                highlightthickness=10, highlightbackground=self.highlight_color,
                                                highlightcolor=self.highlight_color, width=2300)
@@ -644,7 +645,8 @@ class View(tk.Tk):
     def exp_buttons_3(self, exp):
         self.view = tk.StringVar()
         self.explore = tk.StringVar()
-        if exp == "Category/Location/Item" or exp == "Category/Item/Location":
+        if exp == "Category/Location/Item" or exp == "Category/Item/Location"\
+                or exp == "Location/Category/Item":
             q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
             q2_button = tk.Menubutton(self.exp_q2, text="Salesperson", height=1, bg=self.button_color)
             q1_button.pack(fill="both")
@@ -719,6 +721,9 @@ class View(tk.Tk):
         elif exp == "Location/Category":
             self.exp_menu.bind("<<ComboboxSelected>>", self.controller.loc_cat_selected)
             self.exp_menu.set("Select a category")
+        elif exp == "Location/Category/Item":
+            self.exp_menu.bind("<<ComboboxSelected>>", self.controller.loc_cat_item_selected)
+            self.exp_menu.set("Select an item")
 
         self.exp_menu.pack(fill="both", expand=True)
         menu_font = font.Font(size=15)
@@ -741,7 +746,8 @@ class View(tk.Tk):
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
         elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location" \
                 or self.controller.model.explore == "Category/Location/Item" or self.controller.model.explore == "Category/Item"\
-                or self.controller.model.explore == "Category/Item/Location" or self.controller.model.explore == "Location/Category":
+                or self.controller.model.explore == "Category/Item/Location" or self.controller.model.explore == "Location/Category"\
+                or self.controller.model.explore == "Location/Category/Item":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q1)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
 
@@ -768,7 +774,8 @@ class View(tk.Tk):
                 or self.controller.model.explore == "Category/Location/Item"\
                 or self.controller.model.explore == "Category/Item"\
                 or self.controller.model.explore == "Category/Item/Location"\
-                or self.controller.model.explore == "Location/Category":
+                or self.controller.model.explore == "Location/Category"\
+                or self.controller.model.explore == "Location/Category/Item":
             self.employee_list_exp = tk.Listbox(self.exp_q2)
         self.employee_list_exp.pack(fill="both", expand=True)
         er_list = er_frame.values.tolist()
