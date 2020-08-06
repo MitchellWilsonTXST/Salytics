@@ -240,6 +240,14 @@ class Controller:
             self.view.cat_set_weights()
             self.view.explore_menu(self.model.explore, self.model.item_names)
             self.init_item()
+        elif exp == "Salesperson":
+            print(self.model.employee_names[0][0] + " " + self.model.employee_names[0][1])
+            names = []
+            for x in self.model.employee_names:
+                names.append(x[0] + " " + x[1])
+            self.view.cat_set_weights()
+            self.view.explore_menu(self.model.explore, names)
+            self.init_employee()
 
 
     def init_exp_2(self, exp):
@@ -388,6 +396,29 @@ class Controller:
         self.item = Item(sd, id, ed)
 
 
+    def init_employee(self):
+        sd = []
+        id = []
+        ed = []
+        if self.model.month != "ALL":
+            sd = self.month.sales_data.copy()
+            id = self.month.item_data.copy()
+            ed = self.month.employee_data.copy()
+        elif self.model.quarter != "ALL":
+            sd = self.quarter.sales_data.copy()
+            id = self.quarter.item_data.copy()
+            ed = self.quarter.employee_data.copy()
+        elif self.model.year != "ALL":
+            sd = self.year.sales_data.copy()
+            id = self.year.item_data.copy()
+            ed = self.year.employee_data.copy()
+        else:
+            sd = self.model.sales_data.copy()
+            id = self.model.item_data.copy()
+            ed = self.model.employee_data.copy()
+        self.salesperson = Salesperson(sd, id, ed)
+
+
     def init_cat_loc(self):
         sd = []
         id = []
@@ -505,6 +536,27 @@ class Controller:
         self.view.init_cat_q3(self.item.daily_revenue)
         self.view.init_cat_q1(self.item.er_frame)
         self.view.init_cat_q4(self.item.locations, self.item.location_sales)
+        self.view.explore_frame.grid_rowconfigure(1, weight=1)
+
+
+    def employee_selected(self, event):
+        self.salesperson.salesperson = self.view.exp_menu.get()
+        self.salesperson.clean_data()
+        self.view.canvas_q1_exp.get_tk_widget().destroy()
+        self.view.canvas_q2_exp.get_tk_widget().destroy()
+        #if not self.model.first:
+        #    self.view.employee_list_exp.destroy()
+        #else:
+        #    self.model.first = False
+        #    self.view.employee_list_exp.get_tk_widget().destroy()
+        if not self.model.first:
+            self.view.item_list_exp.destroy()
+        else:
+            self.model.first = False
+        self.view.employee_list_exp.get_tk_widget().destroy()
+        self.view.init_cat_q3(self.salesperson.daily_revenue)
+        self.view.init_cat_q2(self.salesperson.item_frame)
+        self.view.init_cat_q4(self.salesperson.category_names, self.salesperson.category_revenue)
         self.view.explore_frame.grid_rowconfigure(1, weight=1)
 
 

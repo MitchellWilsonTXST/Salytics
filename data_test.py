@@ -37,4 +37,31 @@ def test_sort():
     assert failures == 0
 
 
+def test_years():
+    test = [[0, 0, 0, 0, "2012-01-14"],
+            [0, 0, 0, 0, "2013-10-01"]]
+    model = Model()
+    model.sales_data = test
+    model.get_years()
+    assert model.years == ["ALL", "2013", "2012"]
 
+
+def test_total():
+    model = Model()
+    model.sales_data = [["Wilson", "Mitchell", "Chair", 2, "2014-01-01"],
+                        ["Smith", "Bob", "Table", 1, "2014-01-02"]]
+    model.item_data = [["Chair", "A", 10],
+                       ["Table", "B", 20]]
+    model.calc_total_sales()
+    assert model.daily_revenue == [20]
+
+
+def test_cat():
+    model = Model()
+    model.sales_data = [["Bob", "Bob", "Chair", 2, "2012-01-01"],
+                        ["Bob", "Bob", "Table", 2, "2012-01-02"],
+                        ["Ted", "Bob", "Chair", 0, "2012-01-03"]]
+    model.item_data = [["Chair", "Chairs", 10],
+                       ["Table", "Tables", 20]]
+    model.calc_category_sales()
+    assert model.category_revenue == [40, 20, 0, 0, 0, 0, 0]

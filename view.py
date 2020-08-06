@@ -176,7 +176,7 @@ class View(tk.Tk):
         q1_button.grid()
         q1_button.menu = tk.Menu(q1_button, tearoff=0)
         q1_button["menu"] = q1_button.menu
-        q1_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+        q1_button.menu.add_checkbutton(label="Explore", command=lambda: self.explore_window("Salesperson"))
 
         q2_button.grid()
         q2_button.menu = tk.Menu(q2_button, tearoff=0)
@@ -447,7 +447,7 @@ class View(tk.Tk):
             self.exp_q2.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
             self.exp_q3.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
             self.exp_q4.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
-        elif exp == "Item":
+        elif exp == "Item" or exp == "Salesperson":
             self.exp_q1 = tk.LabelFrame(self.explore_frame, padx=10, pady=10, bg=self.bg_color,
                                         borderwidth=0, highlightthickness=0)
             self.exp_q2 = tk.LabelFrame(self.explore_frame, padx=10, pady=10, bg=self.bg_color,
@@ -599,6 +599,30 @@ class View(tk.Tk):
             q1_button.pack(fill="both")
             q2_button.pack(fill="both")
             q3_button.pack(fill="both")
+        elif exp == "Salesperson":
+            q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
+            q2_button = tk.Menubutton(self.exp_q2, text="Item", height=1, bg=self.button_color)
+            q3_button = tk.Menubutton(self.exp_q3, text="Category", height=1, bg=self.button_color)
+
+            q1_button.grid()
+            q1_button.menu = tk.Menu(q1_button, tearoff=0)
+            q1_button["menu"] = q1_button.menu
+            q1_button.menu.add_checkbutton(label="View", variable=self.view)
+
+            q2_button.grid()
+            q2_button.menu = tk.Menu(q2_button, tearoff=0)
+            q2_button["menu"] = q2_button.menu
+            q2_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+
+            q3_button.grid()
+            q3_button.menu = tk.Menu(q3_button, tearoff=0)
+            q3_button["menu"] = q3_button.menu
+            q3_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+            q3_button.menu.add_checkbutton(label="View", variable=self.view)
+
+            q1_button.pack(fill="both")
+            q2_button.pack(fill="both")
+            q3_button.pack(fill="both")
 
 
     def exp_buttons_2(self, exp):
@@ -706,6 +730,9 @@ class View(tk.Tk):
         elif exp == "Item":
             self.exp_menu.bind("<<ComboboxSelected>>", self.controller.item_selected)
             self.exp_menu.set("Select an item")
+        elif exp == "Salesperson":
+            self.exp_menu.bind("<<ComboboxSelected>>", self.controller.employee_selected)
+            self.exp_menu.set("Select a salesperson")
         elif exp == "Category/Location":
             self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_loc_selected)
             self.exp_menu.set("Select a location")
@@ -747,7 +774,8 @@ class View(tk.Tk):
         elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location" \
                 or self.controller.model.explore == "Category/Location/Item" or self.controller.model.explore == "Category/Item"\
                 or self.controller.model.explore == "Category/Item/Location" or self.controller.model.explore == "Location/Category"\
-                or self.controller.model.explore == "Location/Category/Item":
+                or self.controller.model.explore == "Location/Category/Item"\
+                or self.controller.model.explore == "Salesperson":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q1)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
 
@@ -762,7 +790,8 @@ class View(tk.Tk):
         if self.controller.model.explore == "Category" or self.controller.model.explore == "Location":
             self.canvas_q2_exp = FigureCanvasTkAgg(figure, self.exp_q4)
             self.canvas_q2_exp.get_tk_widget().pack(fill="both", expand=True)
-        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Item":
+        elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Item"\
+                or self.controller.model.explore == "Salesperson":
             self.canvas_q2_exp = FigureCanvasTkAgg(figure, self.exp_q3)
             self.canvas_q2_exp.get_tk_widget().pack(fill="both", expand=True)
 
