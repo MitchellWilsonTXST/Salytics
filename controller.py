@@ -260,6 +260,9 @@ class Controller:
                     names.append(x[0])
             self.view.explore_menu(self.model.explore, names)
             self.init_cat_item()
+        elif self.model.explore == "Location/Category":
+            self.view.explore_menu(self.model.explore, self.model.category_names)
+            self.init_loc_cat()
 
 
     def init_exp_3(self, exp):
@@ -277,13 +280,26 @@ class Controller:
                     names.append(x[0])
             self.view.explore_menu(self.model.explore, names)
             self.init_cat_loc_item()
+        elif self.model.explore == "Category/Item/Location":
+            self.view.explore_menu(self.model.explore, self.model.locations)
+            self.init_cat_item_loc()
 
 
     def refresh(self):
         self.model.first = True
-        self.view.explore_frame.pack_forget()
-        self.view.explore_frame.destroy()
-        self.view.main_frame.pack(fill="both", expand=True)
+        if self.model.explore == "Category" or self.model.explore == "Location"\
+            or self.model.explore == "Item" or self.model.explore == "Salesperson":
+            self.view.explore_frame.pack_forget()
+            self.view.explore_frame.destroy()
+            self.view.main_frame.pack(fill="both", expand=True)
+        elif self.model.explore == "Category/Location" or self.model.explore == "Category/Item":
+            self.view.exp_frame_2.pack_forget()
+            self.view.exp_frame_2.destroy()
+            self.view.main_frame.pack(fill="both", expand=True)
+        elif self.model.explore == "Category/Location/Item" or self.model.explore == "Category/Item/Location":
+            self.view.exp_frame_3.pack_forget()
+            self.view.exp_frame_3.destroy()
+            self.view.main_frame.pack(fill="both", expand=True)
 
 
     def all_children(window):
@@ -398,6 +414,28 @@ class Controller:
         self.item = Item(sd, id, ed)
 
 
+    def init_cat_item_loc(self):
+        sd = []
+        id = []
+        ed = []
+        sd = self.item.sales_data.copy()
+        id = self.item.item_data.copy()
+        ed = self.item.employee_data.copy()
+        self.model.first = True
+        self.location = Location(sd, id, ed)
+
+
+    def init_loc_cat(self):
+        sd = []
+        id = []
+        ed = []
+        sd = self.location.sales_data.copy()
+        id = self.location.item_data.copy()
+        ed = self.location.employee_data.copy()
+        self.model.first = True
+        self.category = Category(sd, id, ed)
+
+
     def category_selected(self, event):
         self.category.category = self.view.exp_menu.get()
         self.category.clean_data()
@@ -493,6 +531,33 @@ class Controller:
         self.view.employee_list_exp.destroy()
         self.view.init_cat_q3(self.item.daily_revenue)
         self.view.init_cat_q1(self.item.er_frame)
+
+
+    def cat_item_loc_selected(self, event):
+        self.location.location = self.view.exp_menu.get()
+        self.location.clean_data()
+        self.view.canvas_q1_exp.get_tk_widget().destroy()
+        self.view.canvas_q2_exp.get_tk_widget().destroy()
+        # self.view.item_list_exp.destroy()
+        self.view.employee_list_exp.destroy()
+        self.view.init_cat_q3(self.location.daily_revenue)
+        self.view.init_cat_q1(self.location.er_frame)
+
+
+    def loc_cat_selected(self, event):
+        self.category.category = self.view.exp_menu.get()
+        self.category.clean_data()
+        self.view.canvas_q1_exp.get_tk_widget().destroy()
+        self.view.canvas_q2_exp.get_tk_widget().destroy()
+        self.view.item_list_exp.destroy()
+        if self.model.first:
+            self.view.employee_list_exp.get_tk_widget().destroy()
+            self.model.first = False
+        else:
+            self.view.employee_list_exp.destroy()
+        self.view.init_cat_q3(self.category.daily_revenue)
+        self.view.init_cat_q1(self.category.er_frame)
+        self.view.init_cat_q2(self.category.item_frame)
 
 
     def exp_view_selected(self, frame):

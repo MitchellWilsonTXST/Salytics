@@ -461,7 +461,7 @@ class View(tk.Tk):
 
 
     def exp_base_frames_2(self, exp):
-        if exp == "Category/Location" or exp == "Category/Item":
+        if exp == "Category/Location" or exp == "Category/Item" or exp == "Location/Category":
             self.exp_top_frame = tk.LabelFrame(self.exp_frame_2, padx=10, pady=10, bg=self.top_frame_color,
                                                highlightthickness=10, highlightbackground=self.highlight_color,
                                                highlightcolor=self.highlight_color, width=2300)
@@ -478,7 +478,7 @@ class View(tk.Tk):
 
 
     def exp_base_frames_3(self, exp):
-        if exp == "Category/Location/Item":
+        if exp == "Category/Location/Item" or exp == "Category/Item/Location":
             self.exp_top_frame = tk.LabelFrame(self.exp_frame_3, padx=10, pady=10, bg=self.top_frame_color,
                                                highlightthickness=10, highlightbackground=self.highlight_color,
                                                highlightcolor=self.highlight_color, width=2300)
@@ -490,14 +490,18 @@ class View(tk.Tk):
             self.exp_q1.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
             self.exp_q2.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 
+
     def home_button(self, frame):
         self.home = tk.PhotoImage(file="home.png")
         home_button = tk.Button(frame, image=self.home, command=self.controller.refresh)
         home_button.pack(side=tk.LEFT, fill="y")
 
+
     def refresh(self):
         self.explore_frame.pack_forget()
         self.explore_frame.destroy()
+        frame.pack_forget()
+        frame.destroy()
         self.main_frame.pack(fill="both", expand=True)
 
 
@@ -562,7 +566,8 @@ class View(tk.Tk):
             q4_button.grid()
             q4_button.menu = tk.Menu(q4_button, tearoff=0)
             q4_button["menu"] = q4_button.menu
-            q4_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+            #q4_button.menu.add_checkbutton(label="Explore", variable=self.explore)
+            q4_button.menu.add_command(label="Explore", command=lambda: self.exp_window_2("Category"))
             q4_button.menu.add_checkbutton(label="View", variable=self.view)
 
             q1_button.pack(fill="both")
@@ -598,7 +603,7 @@ class View(tk.Tk):
     def exp_buttons_2(self, exp):
         self.view = tk.StringVar()
         self.explore = tk.StringVar()
-        if exp == "Category/Location":
+        if exp == "Category/Location" or exp == "Location/Category":
             q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
             q2_button = tk.Menubutton(self.exp_q2, text="Salesperson", height=1, bg=self.button_color)
             q3_button = tk.Menubutton(self.exp_q3, text="Item", height=1, bg=self.button_color)
@@ -629,7 +634,7 @@ class View(tk.Tk):
             q3_button.grid()
             q3_button.menu = tk.Menu(q3_button, tearoff=0)
             q3_button["menu"] = q3_button.menu
-            q3_button.menu.add_command(label="Explore", command=lambda: self.exp_window_3("Item"))
+            q3_button.menu.add_command(label="Explore", command=lambda: self.exp_window_3("Location"))
 
             q1_button.pack(fill="both")
             q2_button.pack(fill="both")
@@ -639,7 +644,7 @@ class View(tk.Tk):
     def exp_buttons_3(self, exp):
         self.view = tk.StringVar()
         self.explore = tk.StringVar()
-        if exp == "Category/Location/Item":
+        if exp == "Category/Location/Item" or exp == "Category/Item/Location":
             q1_button = tk.Menubutton(self.exp_q1, text="Total Sales", height=1, bg=self.button_color)
             q2_button = tk.Menubutton(self.exp_q2, text="Salesperson", height=1, bg=self.button_color)
             q1_button.pack(fill="both")
@@ -708,6 +713,12 @@ class View(tk.Tk):
         elif exp == "Category/Location/Item":
             self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_loc_item_selected)
             self.exp_menu.set("Select an item")
+        elif exp == "Category/Item/Location":
+            self.exp_menu.bind("<<ComboboxSelected>>", self.controller.cat_item_loc_selected)
+            self.exp_menu.set("Select a location")
+        elif exp == "Location/Category":
+            self.exp_menu.bind("<<ComboboxSelected>>", self.controller.loc_cat_selected)
+            self.exp_menu.set("Select a category")
 
         self.exp_menu.pack(fill="both", expand=True)
         menu_font = font.Font(size=15)
@@ -720,6 +731,7 @@ class View(tk.Tk):
 
         figure = Figure(figsize=(2, 1), dpi=100)
         plot = figure.add_subplot(1, 1, 1)
+        dif = min(daily_revenue)
         plot.axis([0, len(daily_revenue), min(daily_revenue), max(daily_revenue)])
         x = list(range(1, len(daily_revenue) + 1))
         y = daily_revenue.copy()
@@ -728,7 +740,8 @@ class View(tk.Tk):
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q3)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
         elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location" \
-                or self.controller.model.explore == "Category/Location/Item" or self.controller.model.explore == "Category/Item":
+                or self.controller.model.explore == "Category/Location/Item" or self.controller.model.explore == "Category/Item"\
+                or self.controller.model.explore == "Category/Item/Location" or self.controller.model.explore == "Location/Category":
             self.canvas_q1_exp = FigureCanvasTkAgg(figure, self.exp_q1)
             self.canvas_q1_exp.get_tk_widget().pack(fill="both", expand=True)
 
@@ -753,7 +766,9 @@ class View(tk.Tk):
             self.employee_list_exp = tk.Listbox(self.exp_q1)
         elif self.controller.model.explore == "Item" or self.controller.model.explore == "Category/Location"\
                 or self.controller.model.explore == "Category/Location/Item"\
-                or self.controller.model.explore == "Category/Item":
+                or self.controller.model.explore == "Category/Item"\
+                or self.controller.model.explore == "Category/Item/Location"\
+                or self.controller.model.explore == "Location/Category":
             self.employee_list_exp = tk.Listbox(self.exp_q2)
         self.employee_list_exp.pack(fill="both", expand=True)
         er_list = er_frame.values.tolist()
@@ -764,7 +779,7 @@ class View(tk.Tk):
 
 
     def init_cat_q2(self, item_frame):
-        if self.controller.model.explore == "Category/Location":
+        if self.controller.model.explore == "Category/Location" or self.controller.model.explore == "Location/Category":
             self.item_list_exp = tk.Listbox(self.exp_q3)
         else:
             self.item_list_exp = tk.Listbox(self.exp_q2)
